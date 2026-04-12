@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TournoiRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Equipe;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -53,9 +54,13 @@ class Tournoi
     #[Assert\Range(min: 1, max: 1000, notInRangeMessage: 'Le nombre de participants doit être entre {{ min }} et {{ max }}.')]
     private ?int $maxParticipants = null;
 
-    #[ORM\Column(type: 'float', nullable: true)]
+    // cagnotte stockée en tant que decimal (chaîne) pour éviter les
+    // imprécisions du type flottant. On utilise precision/scale 10,2 par
+    // exemple (max 99999999.99). Lors de l'utilisation, faire la
+    // conversion appropriée ou utiliser une librairie Money.
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
     #[Assert\GreaterThanOrEqual(value: 0, message: 'La cagnotte ne peut pas être négative.')]
-    private ?float $cagnotte = null;
+    private ?string $cagnotte = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     #[Assert\DateTime(message: 'La date limite d\'inscription doit être une date valide.')]
@@ -69,9 +74,16 @@ class Tournoi
     #[Assert\Length(max: 2000, maxMessage: 'La description ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $description = null;
 
+    /**
+     * @var Collection<int, MatchGame>
+     */
+    #[ORM\OneToMany(targetEntity: MatchGame::class, mappedBy: 'tournoi')]
+    private Collection $matchGames;
+
     public function __construct()
     {
-        $this->equipes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->equipes = new ArrayCollection();
+        $this->matchGames = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,12 +199,20 @@ class Tournoi
         return $this;
     }
 
-    public function getCagnotte(): ?float
+    /**
+     * Retourne la cagnotte sous forme de chaîne décimale (ex. "1234.56").
+     */
+    public function getCagnotte(): ?string
     {
         return $this->cagnotte;
     }
 
-    public function setCagnotte(?float $cagnotte): static
+    /**
+     * Définit la cagnotte; attend une chaîne correspondant à un nombre
+     * décimal ou null. Par exemple "100.00". Utiliser des helpers
+     * / Money lib pour manipuler cette valeur.
+     */
+    public function setCagnotte(?string $cagnotte): static
     {
         $this->cagnotte = $cagnotte;
 
@@ -231,6 +251,35 @@ class Tournoi
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MatchGame>
+     */
+    public function getMatchGames(): Collection
+    {
+        return $this->matchGames;
+    }
+
+    public function addMatchGame(MatchGame $matchGame): static
+    {
+        if (!$this->matchGames->contains($matchGame)) {
+            $this->matchGames->add($matchGame);
+            $matchGame->setTournoi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMatchGame(MatchGame $matchGame): static
+    {
+        if ($this->matchGames->removeElement($matchGame)) {
+            if ($matchGame->getTournoi() === $this) {
+                $matchGame->setTournoi(null);
+            }
+        }
 
         return $this;
     }

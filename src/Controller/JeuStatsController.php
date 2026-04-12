@@ -39,13 +39,13 @@ class JeuStatsController extends AbstractController
                 
                 // Cagnotte
                 if ($tournoi->getCagnotte()) {
-                    $cagnotteTotal += $tournoi->getCagnotte();
+                    $cagnotteTotal += (float) $tournoi->getCagnotte();
                 }
                 
                 // Matchs
                 $matchs = $entityManager->getRepository(\App\Entity\MatchGame::class)
                     ->createQueryBuilder('m')
-                    ->where('m.Tournoi = :tournoi')
+                    ->where('m.tournoi = :tournoi')
                     ->setParameter('tournoi', $tournoi)
                     ->getQuery()
                     ->getResult();
@@ -107,13 +107,13 @@ class JeuStatsController extends AbstractController
                 
                 // Cagnotte
                 if ($tournoi->getCagnotte()) {
-                    $cagnotteTotal += $tournoi->getCagnotte();
+                    $cagnotteTotal += (float) $tournoi->getCagnotte();
                 }
                 
                 // Matchs
                 $matchs = $entityManager->getRepository(\App\Entity\MatchGame::class)
                     ->createQueryBuilder('m')
-                    ->where('m.Tournoi = :tournoi')
+                    ->where('m.tournoi = :tournoi')
                     ->setParameter('tournoi', $tournoi)
                     ->getQuery()
                     ->getResult();

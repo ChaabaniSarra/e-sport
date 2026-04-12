@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Blog;
 use App\Entity\Comment;
 use App\Entity\Rating;
+use App\Entity\User;
 use App\Form\BlogType;
 use App\Repository\BlogRepository;
 use App\Repository\RatingRepository;
@@ -145,11 +146,11 @@ final class BlogController extends AbstractController
             throw $this->createNotFoundException('Blog not found.');
         }
 
-        $user = $this->getUser();
-        if (!$user) {
-            $this->addFlash('error', 'You must be logged in to comment.');
-            return $this->redirectToRoute('app_blog_user_index');
-        }
+$user = $this->getUser();
+if (!$user instanceof User) {
+    $this->addFlash('error', 'You must be logged in to comment.');
+    return $this->redirectToRoute('app_blog_user_index');
+}
 
         // 🔐 VALIDATION RECAPTCHA
         $recaptchaResponse = $request->request->get('g-recaptcha-response');
@@ -212,11 +213,12 @@ final class BlogController extends AbstractController
     #[Route('/{id}/rate', name: 'app_blog_rate', methods: ['POST'])]
     public function rate(Request $request, Blog $blog, EntityManagerInterface $em, RatingRepository $ratingRepository): Response
     {
+        
         $user = $this->getUser();
-        if (!$user) {
-            $this->addFlash('error', 'You must be logged in to rate.');
-            return $this->redirectToRoute('app_blog_user_index');
-        }
+if (!$user instanceof User) {
+    $this->addFlash('error', 'You must be logged in to rate.');
+    return $this->redirectToRoute('app_blog_user_index');
+}
 
         $value = (int)$request->request->get('value');
         if ($value < 1 || $value > 5) {
@@ -259,7 +261,7 @@ final class BlogController extends AbstractController
     public function apiRate(Request $request, Blog $blog, EntityManagerInterface $em, RatingRepository $ratingRepository): JsonResponse
     {
         $user = $this->getUser();
-        if (!$user) {
+        if (!$user instanceof User) {
             return $this->json(['error' => 'You must be logged in to rate.'], 403);
         }
 
@@ -306,11 +308,12 @@ final class BlogController extends AbstractController
     #[Route('/api/{id}/rating-stats', name: 'app_blog_api_rating_stats', methods: ['GET'])]
     public function getRatingStats(Blog $blog): JsonResponse
     {
+        $user = $this->getUser();
         return $this->json([
             'average' => $blog->getAverageRating(),
             'count' => $blog->getRatingCount(),
             'distribution' => $blog->getRatingDistribution(),
-            'userRating' => $this->getUser() ? $blog->getUserRating($this->getUser()->getId()) : null
+            'userRating' => $user instanceof User ? $blog->getUserRating($user->getId()) : null
         ]);
     }
 

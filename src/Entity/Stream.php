@@ -31,8 +31,12 @@ class Stream
     /**
      * @var Collection<int, StreamReaction>
      */
-    #[ORM\OneToMany(mappedBy: 'stream', targetEntity: StreamReaction::class)]
+    #[ORM\OneToMany(mappedBy: 'stream', targetEntity: StreamReaction::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $reactions;
+
+    #[ORM\ManyToOne(targetEntity: MatchGame::class, inversedBy: 'streams')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?MatchGame $matchGame = null;
 
     // Champ pour VichUploader
     #[UploadableField(mapping: 'stream_video', fileNameProperty: 'url')]
@@ -56,11 +60,11 @@ class Stream
         return $this->url;
     }
 
-    public function setUrl(string $url): static
-    {
-        $this->url = $url;
-        return $this;
-    }
+   public function setUrl(?string $url): static
+{
+    $this->url = $url;
+    return $this;
+}
 
     public function isActive(): ?bool
     {
@@ -127,5 +131,16 @@ class Stream
     public function getVideoFile(): ?File
     {
         return $this->videoFile;
+    }
+
+    public function getMatchGame(): ?MatchGame
+    {
+        return $this->matchGame;
+    }
+
+    public function setMatchGame(?MatchGame $matchGame): static
+    {
+        $this->matchGame = $matchGame;
+        return $this;
     }
 }

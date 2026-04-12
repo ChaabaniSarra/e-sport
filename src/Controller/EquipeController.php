@@ -72,7 +72,7 @@ final class EquipeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $logoFile */
+            /** @var UploadedFile|null $logoFile */
             $logoFile = $form->get('logo')->getData();
 
             if ($logoFile) {
@@ -135,7 +135,7 @@ final class EquipeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-             /** @var UploadedFile $logoFile */
+             /** @var UploadedFile|null $logoFile */
              $logoFile = $form->get('logo')->getData();
 
              if ($logoFile) {
@@ -518,6 +518,7 @@ final class EquipeController extends AbstractController
         $joinRequest->setEquipe($equipe);
         $joinRequest->setUser($user);
         $joinRequest->setStatus('pending');
+        $joinRequest->setCreatedBy($user);
 
         $entityManager->persist($joinRequest);
         $entityManager->flush();
@@ -527,7 +528,7 @@ final class EquipeController extends AbstractController
         if ($owner && $owner->getEmail()) {
             try {
                 $notification = new JoinRequestNotification(
-                    $user->getNom() ?? $user->getEmail(),
+                    $user->getNom() ?: $user->getEmail(),
                     $equipe->getNom(),
                     $this->getParameter('kernel.project_dir')
                 );
@@ -563,9 +564,11 @@ final class EquipeController extends AbstractController
             } else {
                 $equipe->addMember($joinRequest->getUser());
                 $joinRequest->setStatus('accepted');
+                $joinRequest->setUpdatedBy($this->getUser());
             }
         } elseif ($action === 'reject') {
             $joinRequest->setStatus('rejected');
+            $joinRequest->setUpdatedBy($this->getUser());
         }
 
         $entityManager->flush();
@@ -638,6 +641,7 @@ final class EquipeController extends AbstractController
             ->getQuery()
             ->getResult();
 
+        /** @var array<int|null, array{equipe: Equipe, mj: int, v: int, n: int, p: int, bp: int, bc: int, pts?: int, diff?: int, ppm?: float, badge?: string}> $stats */
         $stats = [];
         foreach ($allTeams as $team) {
             $id = $team->getId();

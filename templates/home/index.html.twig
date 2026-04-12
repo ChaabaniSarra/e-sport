@@ -94,7 +94,85 @@
             </div>
         </section>
         <!--::client logo part end::-->
+<!-- TOP SALES -->
+<section class="section_padding" style="background: rgba(0,0,0,0.3);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="section_tittle">
+                    <h2>🔥 Top Sales</h2>
+                    <p style="color: #94a3b8;">Les produits les plus vendus</p>
+                </div>
+            </div>
+        </div>
 
+        <div class="row justify-content-center mt-4">
+            {% for product in topSales %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div style="
+                    background: linear-gradient(145deg, rgba(15,23,42,0.9), rgba(30,41,59,0.7));
+                    border: 1px solid rgba(220,38,38,0.2);
+                    border-radius: 16px;
+                    overflow: hidden;
+                    transition: transform 0.3s, box-shadow 0.3s;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+                " onmouseover="this.style.transform='translateY(-8px)';this.style.boxShadow='0 20px 40px rgba(220,38,38,0.2)'"
+                   onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 10px 30px rgba(0,0,0,0.4)'">
+
+                    <!-- Badge top 1/2/3 -->
+                    {% if loop.index == 1 %}
+                        <div style="background: linear-gradient(90deg, #f59e0b, #ef4444); color: white; text-align: center; padding: 6px; font-size: 0.75rem; font-weight: 800; letter-spacing: 2px;">
+                            👑 BEST SELLER
+                        </div>
+                    {% elseif loop.index == 2 %}
+                        <div style="background: rgba(192,192,210,0.2); color: #c0c0d2; text-align: center; padding: 6px; font-size: 0.75rem; font-weight: 800; letter-spacing: 2px;">
+                            🥈 #2 TOP SALES
+                        </div>
+                    {% else %}
+                        <div style="background: rgba(205,127,50,0.2); color: #cd7f32; text-align: center; padding: 6px; font-size: 0.75rem; font-weight: 800; letter-spacing: 2px;">
+                            🥉 #3 TOP SALES
+                        </div>
+                    {% endif %}
+
+                    <!-- Image -->
+                    <div style="height: 200px; overflow: hidden;">
+                        <img src="{{ product.image }}" alt="{{ product.name }}"
+                             style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+
+                    <!-- Info -->
+                    <div style="padding: 20px;">
+                        <h5 style="color: #e2e8f0; font-weight: 800; margin-bottom: 8px;">
+                            {{ product.name }}
+                        </h5>
+                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 16px;">
+                            {{ product.description|slice(0, 80) }}...
+                        </p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="
+                                background: linear-gradient(90deg, #ef4444, #f59e0b);
+                                -webkit-background-clip: text;
+                                -webkit-text-fill-color: transparent;
+                                font-size: 1.4rem;
+                                font-weight: 900;
+                            ">
+                                {{ product.price|number_format(2, ',', ' ') }} TND
+                            </span>
+                            <a href="{{ path('app_product_show', {id: product.id}) }}"
+                               class="btn_1" style="padding: 8px 20px; font-size: 0.85rem;">
+                                Voir →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <p style="color: #64748b; text-align: center;">Aucune vente pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- TOP SALES END -->
         <!-- about_us part start-->
         <section class="about_us section_padding">
             <div class="container">
@@ -172,48 +250,13 @@
 <div class="section">
 
   <!-- TEXT -->
-  <div class="section_title">
-    <h2>JOIN THE BATTLE</h2>
-    <h3>Build your Legend</h3>
-    <h4>Create or join competitive esports teams and dominate tournaments</h4>
-  </div>
+ 
 
 <!-- CARDS -->
-<div class="cards-container">
 
-    <div class="card">
-        <div class="glow"></div>
-        <div class="inner">
-            <div class="photo" style="background-image: url('{{ asset('img/0c538dab84ae3d1104af2e42631072ed.jpg') }}');"></div>
-            <div class="content">
-                <p class="title">
-                    Some Famous <br>
-                    <span>Creative Designer</span>
-                </p>
-                <ul class="sci">
-                    <li><a href="#">IG</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+   
 
-    <div class="card">
-        <div class="glow"></div>
-        <div class="inner">
-            <div class="photo" style="background-image: url('{{ asset('img/0c538dab84ae3d1104af2e42631072ed.jpg') }}');"></div>
-            <div class="content">
-                <p class="title">
-                    Some Famous <br>
-                    <span>Creative Designer</span>
-                </p>
-                <ul class="sci">
-                    <li><a href="#">IG</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-</div>
+  
 
         <section class="Latest_War">
             <div class="container">
@@ -602,211 +645,7 @@
         </section>
         <!-- GLOBAL RANKING END -->
 
-        <!-- gallery_part part start-->
-        <section class="gallery_part section_padding">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-5">
-                        <div class="section_tittle text-center">
-                            <h2>All Fighter</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="gallery_part_item">
-                            <div class="grid">
-                                <div class="grid-sizer"></div>
-                                <a href="assets/img/gallery/gallery_item_1.png"
-                                    class="grid-item bg_img img-gal grid-item--height-1"
-                                    style="background-image: url('img/gallery/gallery_item_1.png')">
-                                    <div class="single_gallery_item">
-                                        <div class="single_gallery_item_iner">
-                                            <div class="gallery_item_text">
-                                                <i class="ti-zoom-in"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="assets/img/gallery/gallery_item_2.png" class="grid-item bg_img img-gal"
-                                    style="background-image: url('img/gallery/gallery_item_2.png')">
-                                    <div class="single_gallery_item">
-                                        <div class="single_gallery_item_iner">
-                                            <div class="gallery_item_text">
-                                                <i class="ti-zoom-in"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="assets/img/gallery/gallery_item_3.png" class="grid-item bg_img img-gal"
-                                    style="background-image: url('img/gallery/gallery_item_3.png')">
-                                    <div class="single_gallery_item">
-                                        <div class="single_gallery_item_iner">
-                                            <div class="gallery_item_text">
-                                                <i class="ti-zoom-in"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="assets/img/gallery/gallery_item_5.png"
-                                    class="grid-item bg_img img-gal grid-item--height-2"
-                                    style="background-image: url('img/gallery/gallery_item_5.png')">
-                                    <div class="single_gallery_item">
-                                        <div class="single_gallery_item_iner">
-                                            <div class="gallery_item_text">
-                                                <i class="ti-zoom-in"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="assets/img/gallery/gallery_item_5.png"
-                                    class="grid-item bg_img img-gal grid-item--height-2"
-                                    style="background-image: url('img/gallery/gallery_item_7.png')">
-                                    <div class="single_gallery_item">
-                                        <div class="single_gallery_item_iner">
-                                            <div class="gallery_item_text">
-                                                <i class="ti-zoom-in"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="assets/img/gallery/gallery_item_6.png"
-                                    class="grid-item bg_img img-gal grid-item--width-1"
-                                    style="background-image: url('img/gallery/gallery_item_6.png')">
-                                    <div class="single_gallery_item">
-                                        <div class="single_gallery_item_iner">
-                                            <div class="gallery_item_text">
-                                                <i class="ti-zoom-in"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="assets/img/gallery/gallery_item_4.png"
-                                    class="grid-item bg_img img-gal sm_weight  grid-item--height-1"
-                                    style="background-image: url('img/gallery/gallery_item_4.png')">
-                                    <div class="single_gallery_item">
-                                        <div class="single_gallery_item_iner">
-                                            <div class="gallery_item_text">
-                                                <i class="ti-zoom-in"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- gallery_part part end-->
-
-        <!-- use sasu part end-->
-        <section class="upcomming_war">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="section_tittle text-center">
-                            <h2>Upcoming Fighter</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="upcomming_war_iner">
-                    <div class="row justify-content-center align-items-center h-100">
-                        <div class="col-10 col-sm-5 col-lg-3">
-                            <div class="upcomming_war_counter text-center">
-                                <h2>Dark Dragon</h2>
-                                <div id="timer" class="d-flex justify-content-between">
-                                    <div id="days"></div>
-                                    <div id="hours"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- use sasu part end-->
-
-        <!-- pricing part start-->
-        <section class="pricing_part padding_top">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-6">
-                        <div class="section_tittle text-center">
-                            <h2>Pricing plans</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="single_pricing_part">
-                            <p>Silver Package</p>
-                            <h3>$50.00</h3>
-                            <ul>
-                                <li>2GB Bandwidth</li>
-                                <li>Two Account</li>
-                                <li>15GB Storage</li>
-                            </ul>
-                            <a href="#" class="btn_2">Choose Plane</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="single_pricing_part">
-                            <p>Silver Package</p>
-                            <h3>$60.00</h3>
-                            <ul>
-                                <li>2GB Bandwidth</li>
-                                <li>Two Account</li>
-                                <li>15GB Storage</li>
-                            </ul>
-                            <a href="#" class="btn_2">Choose Plane</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="single_pricing_part">
-                            <p>Silver Package</p>
-                            <h3>$80.00</h3>
-                            <ul>
-                                <li>2GB Bandwidth</li>
-                                <li>Two Account</li>
-                                <li>15GB Storage</li>
-                            </ul>
-                            <a href="#" class="btn_2">Choose Plane</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- pricing part end-->
-
-        
-
-    <!-- jquery plugins here-->
-    <script src="js/jquery-1.12.1.min.js"></script>
-    <!-- popper js -->
-    <script src="js/popper.min.js"></script>
-    <!-- bootstrap js -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- easing js -->
-    <script src="js/jquery.magnific-popup.js"></script>
-    <!-- swiper js -->
-    <script src="js/swiper.min.js"></script>
-    <!-- swiper js -->
-    <script src="js/masonry.pkgd.js"></script>
-    <!-- particles js -->
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.nice-select.min.js"></script>
-    <!-- slick js -->
-    <script src="js/slick.min.js"></script>
-    <script src="js/jquery.counterup.min.js"></script>
-    <script src="js/waypoints.min.js"></script>
-    <script src="js/contact.js"></script>
-    <script src="js/jquery.ajaxchimp.min.js"></script>
-    <script src="js/jquery.form.js"></script>
-    <script src="js/jquery.validate.min.js"></script>
-    <script src="js/mail-script.js"></script>
-    <!-- custom js -->
-    <script src="js/custom.js"></script>
+       
 </body>
 
 </html>

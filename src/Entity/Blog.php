@@ -22,16 +22,16 @@ class Blog
     #[Assert\NotBlank(message: "Le titre est obligatoire")]
     #[Assert\Length(min: 3, max: 255)]
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    private string $title = '';
 
     #[Assert\NotBlank(message: "Le contenu (URL de l'image) est obligatoire")]
     #[Assert\Length(min: 10)]
     #[Assert\Url(message: "Le contenu doit être une URL valide")]
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $content = null;
+    private string $content = '';
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private \DateTimeImmutable $createdAt ;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $category = null;
@@ -40,17 +40,16 @@ class Blog
     private ?string $imageName = null;
 
     #[ORM\Column]
-    private ?int $commentCount = 0;
+    private int $commentCount = 0;
 
-    #[ORM\OneToMany(mappedBy: 'blog', targetEntity: Comment::class, cascade: ['remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'blog', targetEntity: Comment::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $comments;
 
     /**
-     * @ORM\OneToMany(mappedBy: 'blog', targetEntity: Rating::class, cascade: ['persist', 'remove'], orphanRemoval: true)
-     */
-    #[ORM\OneToMany(mappedBy: 'blog', targetEntity: Rating::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private Collection $ratings;
-
+ * @ORM\OneToMany(mappedBy="blog", targetEntity=Rating::class, cascade={"persist","remove"}, orphanRemoval=true)
+ */
+#[ORM\OneToMany(mappedBy: 'blog', targetEntity: Rating::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+private Collection $ratings;
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -64,7 +63,7 @@ class Blog
         return $this->id; 
     }
     
-    public function getTitle(): ?string 
+    public function getTitle(): string 
     { 
         return $this->title; 
     }
@@ -75,7 +74,7 @@ class Blog
         return $this; 
     }
     
-    public function getContent(): ?string 
+    public function getContent(): string 
     { 
         return $this->content; 
     }
@@ -86,7 +85,7 @@ class Blog
         return $this; 
     }
     
-    public function getCreatedAt(): ?\DateTimeImmutable 
+    public function getCreatedAt(): \DateTimeImmutable 
     { 
         return $this->createdAt; 
     }
